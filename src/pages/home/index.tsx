@@ -1,8 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { useRouter } from "next/router";
 import { getSession } from "next-auth/client";
-import { api } from "../../service/api";
-import { AxiosResponse } from "axios";
+import { api, awakeServer } from "../../service/api";
 
 const Home = () => {
   const [loading, setLoading] = useState(true);
@@ -60,6 +59,7 @@ const Home = () => {
       .catch((err) => {
         console.log(" GET SESSION ERROR = ", err);
       });
+    awakeServer.then();
   }, []);
 
   return (
