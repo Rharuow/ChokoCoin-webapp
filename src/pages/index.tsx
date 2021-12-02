@@ -18,10 +18,8 @@ const Home: React.FC = () => {
           <Link href="/login" passHref>
             <a className="btn btn-success w-25">Login</a>
           </Link>
-          <Link href="#">
-            <a href="" className="btn btn-primary w-25">
-              Cadastrar
-            </a>
+          <Link href="/signup" passHref>
+            <a className="btn btn-primary w-25">Cadastrar</a>
           </Link>
         </div>
       </main>

@@ -1,37 +1,94 @@
 import React from "react";
-import { Card, Form } from "react-bootstrap";
-import { useForm, FormProvider, useFormContext } from "react-hook-form";
+import Link from "next/link";
+import { useRouter } from "next/router";
+import { Card, Form, Button } from "react-bootstrap";
+import { FormProvider, useForm, useFormContext } from "react-hook-form";
+import Swal from "sweetalert2";
+
+import { api } from "../../service/api";
 
 const LoginForm: React.FC = () => {
+  const { register } = useFormContext();
   return (
     <>
-      <Form.Group>
+      <Form.Group className="mt-3">
         <Form.Label>Nome</Form.Label>
-        <Form.Control type="text" placeholder="Digite seu nome" />
-      </Form.Group>
-      <Form.Group>
-        <Form.Label>Email</Form.Label>
-        <Form.Control type="email" placeholder="Digite seu email" />
+        <Form.Control
+          required
+          type="text"
+          {...register("username")}
+          placeholder="Digite seu nome"
+        />
       </Form.Group>
 
-      <Form.Group>
+      <Form.Group className="mt-3">
+        <Form.Label>Email</Form.Label>
+        <Form.Control
+          required
+          type="email"
+          {...register("email")}
+          placeholder="Digite seu email"
+        />
+      </Form.Group>
+
+      <Form.Group className="mt-3">
         <Form.Label>Senha</Form.Label>
-        <Form.Control type="password" />
+        <Form.Control required type="password" {...register("password")} />
+      </Form.Group>
+
+      <Form.Group className="mt-3">
+        <Form.Label>Chave</Form.Label>
+        <Form.Control required type="password" {...register("key")} />
+      </Form.Group>
+
+      <Form.Group className="mt-3 d-flex justify-content-around">
+        <Button type="submit">Salvar</Button>
+        <Link href="/" passHref>
+          <a className="btn btn-danger">Voltar</a>
+        </Link>
       </Form.Group>
     </>
   );
 };
 
 const Login: React.FC = () => {
-  const methods = useFormContext();
+  const methods = useForm();
+  const router = useRouter();
+
+  const onSubmit: (data: {
+    username: string;
+    email: string;
+    password: string;
+    key: string;
+  }) => void = (data) => {
+    api
+      .post("users", data, { headers: { secret: data.key } })
+      .then((res) => {
+        Swal.fire({
+          title: "Feito",
+          text: `${data.username} foi cadastrado com sucesso`,
+          icon: "success",
+        }).then(() => {
+          router.push("/login");
+        });
+      })
+      .catch((error) => {
+        console.log(error.message);
+        Swal.fire({
+          title: "Hmm...",
+          text: `Alguma coisa não parece certa!`,
+          icon: "info",
+        });
+      });
+  };
 
   return (
-    <div className="d-flex justify-content-center align-items-center h-100vh bg-dark">
-      <Card>
-        <Card.Header className="text-center">Login</Card.Header>
+    <div className="d-flex justify-content-center align-items-center h-100vh bg-dark px-5">
+      <Card className="w-50">
+        <Card.Header className="text-center">Cadastrar</Card.Header>
         <Card.Body>
           <FormProvider {...methods}>
-            <Form>
+            <Form onSubmit={methods.handleSubmit(onSubmit)}>
               <LoginForm />
             </Form>
           </FormProvider>
