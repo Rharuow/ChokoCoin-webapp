@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import { useRouter } from "next/router";
 import { getSession } from "next-auth/client";
 import { api } from "../../service/api";
+import { AxiosResponse } from "axios";
 
 const Home = () => {
   const [loading, setLoading] = useState(true);
@@ -13,27 +14,44 @@ const Home = () => {
           id: string;
           email: string;
           username: string;
-          projects: [{ name: string; value: number }] | null;
+          projects: [{ name: string; value: number }] | null | undefined;
         };
+      }>
+    >
+  >();
+  const [projects, setProjects] = useState<
+    React.Dispatch<
+      React.SetStateAction<{
+        projects: [{ name: string; value: number }] | null | undefined;
       }>
     >
   >();
 
   useEffect(() => {
     getSession()
-      .then((session) => {
+      .then(async (session) => {
         if (session) {
-          // route to get user by token throught
           api
             .get("project", {
               headers: {
-                Authorization:
-                  "Bear eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjp7ImVtYWlsIjoiaGFyeXNzb25zb2FyZXNAZ21haWwuY29tIiwiaWQiOiI1ZWVhYTBhNC04YThjLTQ2NTQtYTkwOS0zZmJhNjE2YmY3OWMifSwiaWF0IjoxNjM4NDc1NTk0fQ.dqv7IB3cI7jQ70E_JpQE6dEVTX5Bq3QnTGqMN8LdHiY",
+                Authorization: `Beare ${session.user.token}`,
               },
             })
             .then((res) => {
-              console.log("project", res.data);
-            });
+              setProjects(res.data);
+            })
+            .catch((error) => console.log(error.message));
+
+          api
+            .get("user", {
+              headers: {
+                Authorization: `Beare ${session.user.token}`,
+              },
+            })
+            .then((res) => {
+              setUser(res.data);
+            })
+            .catch((error) => console.log(error.message));
           setLoading(false);
         } else {
           router.push("/");
