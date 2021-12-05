@@ -20,13 +20,6 @@ const awakeServer = api
     console.log(err);
   });
 
-api.interceptors.request.use(async (config) => {
-  const session = await getSession();
-  if (session?.token !== undefined)
-    config = { headers: { Authorization: `Bearer ${session.token}` } };
-  return config;
-});
-
 const nextAuth = axios.create({
   baseURL: `${process.env.NEXT_PUBLIC_SITE_URL}`,
   // headers: { Origin: `${process.env.NEXT_PUBLIC_SITE_URL}` },

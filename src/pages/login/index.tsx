@@ -45,9 +45,6 @@ const Login: React.FC = () => {
   const onSubmit: (data: { email: string; password: string }) => void = async (
     data
   ) => {
-    console.log("data = ", data);
-    console.log("NEXT_PUBLIC_SITE_URL = ", process.env.NEXT_PUBLIC_SITE_URL);
-
     const csrfToken = await getCsrfToken();
 
     setLoading(true);
@@ -97,7 +94,7 @@ const Login: React.FC = () => {
             title: "Sessão ativa",
             text: "Você já fez login no sistema",
           }).then(() => {
-            router.push("/dashboard");
+            router.push("/home");
           });
         } else if (callbackUrl) {
           router.push(`${callbackUrl}`);
