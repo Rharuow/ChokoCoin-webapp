@@ -30,7 +30,7 @@ export interface IProject {
 export interface IContextHome {
   user: IUserHome;
   setUser: React.Dispatch<React.SetStateAction<IUserHome | undefined>>
-  projects: IProject
+  projects: Array<IProject> | []
   modalIsOpen: boolean
   setIsOpen: React.Dispatch<React.SetStateAction<boolean>>
 }
@@ -151,7 +151,7 @@ const Home: React.FC = () => {
   const router = useRouter();
   const [loading, setLoading] = useState(true);
   const [user, setUser] = useState<IUserHome>();
-  const [projects, setProjects] = useState<Array<IProject>>();
+  const [projects, setProjects] = useState<Array<IProject>>([]);
   const [modalIsOpen, setIsOpen] = useState(false);
 
 
@@ -192,7 +192,7 @@ const Home: React.FC = () => {
   }, []);
 
   return (
-    <HomeContext.Provider value={{user, setUser, projects, setProjects, modalIsOpen, setIsOpen, loading, setLoading}}>
+    <HomeContext.Provider value={{user: user!, setUser, projects, setProjects, modalIsOpen, setIsOpen, loading, setLoading}}>
       <Content />
     </HomeContext.Provider>
   );
