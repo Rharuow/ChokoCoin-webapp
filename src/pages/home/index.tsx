@@ -1,23 +1,41 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext, createContext } from "react";
 import { useRouter } from "next/router";
 import { getSession } from "next-auth/client";
 import Swal from "sweetalert2";
 import { Card, Form, Button } from "react-bootstrap";
 import { FormProvider, useForm, useFormContext } from "react-hook-form";
+import Modal from 'react-modal';
 
+import Content from "../../domain/Home"
 import { api, awakeServer } from "../../service/api";
 
 export interface IUserHome {
   id: string;
   email: string;
   username: string;
-  projects: [{ name: string; value: number }];
+  projects: [{ name: string; value: number; }];
+}
+
+export interface IUser {
+  email: string;
+  username: string
 }
 
 export interface IProject {
   name: string;
   value: number;
+  partners: Array<IUser>
 }
+
+export interface IContextHome {
+  user: IUserHome;
+  setUser: React.Dispatch<React.SetStateAction<IUserHome | undefined>>
+  projects: IProject
+  modalIsOpen: boolean
+  setIsOpen: React.Dispatch<React.SetStateAction<boolean>>
+}
+
+export const HomeContext = createContext({} as IContextHome)
 
 const FormProject: React.FC = () => {
   const { register } = useFormContext();
@@ -52,13 +70,9 @@ const FormProject: React.FC = () => {
   );
 };
 
-const Home: React.FC = () => {
-  const [loading, setLoading] = useState(true);
-  const router = useRouter();
-  const [user, setUser] = useState<IUserHome>();
-  const [projects, setProjects] = useState<[{ name: string; value: number }]>(
-    []
-  );
+const ModalFormProject: React.FC = () => {
+
+  const {modalIsOpen} = useContext(HomeContext)
 
   const methods = useForm();
 
@@ -79,7 +93,7 @@ const Home: React.FC = () => {
             )
             .then((res: { data: IProject }) => {
               const tempProjects = projects;
-              tempProjects.push(res.data);
+              tempProjects && tempProjects.push(res.data);
               setProjects(tempProjects);
               Swal.fire({
                 icon: "success",
@@ -99,6 +113,47 @@ const Home: React.FC = () => {
       })
       .catch((error) => console.log("error = ", error.message));
   };
+
+  const customStyles = {
+    content: {
+      top: '50%',
+      left: '50%',
+      right: 'auto',
+      bottom: 'auto',
+      marginRight: '-50%',
+      transform: 'translate(-50%, -50%)',
+    },
+  };
+
+  return (
+    <Modal
+        isOpen={modalIsOpen}
+        style={customStyles}
+        contentLabel="Example Modal"
+      >
+      <Card>
+        <Card.Header>
+          <h1>Cadastrar Projeto</h1>
+        </Card.Header>
+        <Card.Body>
+          <FormProvider {...methods}>
+            <Form onSubmit={methods.handleSubmit(onSubmit)}>
+              <FormProject />
+            </Form>
+          </FormProvider>
+        </Card.Body>
+      </Card>
+    </Modal>
+  )
+}
+
+const Home: React.FC = () => {
+  const router = useRouter();
+  const [loading, setLoading] = useState(true);
+  const [user, setUser] = useState<IUserHome>();
+  const [projects, setProjects] = useState<Array<IProject>>();
+  const [modalIsOpen, setIsOpen] = useState(false);
+
 
   useEffect(() => {
     getSession()
@@ -137,42 +192,9 @@ const Home: React.FC = () => {
   }, []);
 
   return (
-    <div className="h-100vh-min bg-dark">
-      <div className="flex-center-y-around-x flex-wrap">
-        <Card className="h-100">
-          <Card.Header>
-            <h1 className="text-center">Bem vindo {user?.username}</h1>
-          </Card.Header>
-          <Card.Body>
-            <h2>Projetos:</h2>
-          </Card.Body>
-        </Card>
-        <Card>
-          <Card.Header>
-            <h1>Cadastrar Projeto</h1>
-          </Card.Header>
-          <Card.Body>
-            <FormProvider {...methods}>
-              <Form onSubmit={methods.handleSubmit(onSubmit)}>
-                <FormProject />
-              </Form>
-            </FormProvider>
-          </Card.Body>
-        </Card>
-      </div>
-      <div className="flex-center-y-around-x flex-wrap">
-        {projects &&
-          projects.map((project) => (
-            <Card key={project.name}>
-              <Card.Title>Projetos</Card.Title>
-              <Card.Body>
-                <p>nome: {project.name}</p>
-                <p>valor: {project.value}</p>
-              </Card.Body>
-            </Card>
-          ))}
-      </div>
-    </div>
+    <HomeContext.Provider value={{user, setUser, projects, setProjects, modalIsOpen, setIsOpen, loading, setLoading}}>
+      <Content />
+    </HomeContext.Provider>
   );
 };
 

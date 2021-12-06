@@ -1,9 +1,9 @@
 import axios from "axios";
 import qs from "qs";
-import { getSession } from "next-auth/client";
 
 axios.defaults.paramsSerializer = (params) =>
   qs.stringify(params, { arrayFormat: "brackets" });
+
 
 const api = axios.create({
   baseURL: process.env.NEXT_PUBLIC_API_BASEPATH,
