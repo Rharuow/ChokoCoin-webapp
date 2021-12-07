@@ -1,12 +1,15 @@
 import React, { useContext } from 'react'
 import { Card } from 'react-bootstrap'
+
 import { HomeContext } from '../../pages/home'
+import ModalFormProject from './Modal'
 
 const Content: React.FC = () => {
     const {user, projects} = useContext(HomeContext)
 
     return (
-        <div className="h-100vh-min bg-dark">
+      <div className="h-100vh-min bg-dark">
+        <ModalFormProject />
         <div className="flex-center-y-around-x flex-wrap">
           <Card className="h-100">
             <Card.Header>

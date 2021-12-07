@@ -1,10 +1,8 @@
 import React, { useState, useEffect, useContext, createContext } from "react";
 import { useRouter } from "next/router";
 import { getSession } from "next-auth/client";
-import Swal from "sweetalert2";
-import { Card, Form, Button } from "react-bootstrap";
-import { FormProvider, useForm, useFormContext } from "react-hook-form";
-import Modal from 'react-modal';
+import { Form, Button } from "react-bootstrap";
+import { useFormContext } from "react-hook-form";
 
 import Content from "../../domain/Home"
 import { api, awakeServer } from "../../service/api";
@@ -31,8 +29,12 @@ export interface IContextHome {
   user: IUserHome;
   setUser: React.Dispatch<React.SetStateAction<IUserHome | undefined>>
   projects: Array<IProject> | []
+  setProjects: React.Dispatch<React.SetStateAction<IProject[]>>
   modalIsOpen: boolean
   setIsOpen: React.Dispatch<React.SetStateAction<boolean>>
+  loading: boolean
+  setLoading: React.Dispatch<React.SetStateAction<boolean>>
+
 }
 
 export const HomeContext = createContext({} as IContextHome)
@@ -70,89 +72,12 @@ const FormProject: React.FC = () => {
   );
 };
 
-const ModalFormProject: React.FC = () => {
-
-  const {modalIsOpen} = useContext(HomeContext)
-
-  const methods = useForm();
-
-  const onSubmit: (data: { name: string; value: number }) => void = (data) => {
-    const value: number = data.value;
-    getSession()
-      .then((session) => {
-        if (session) {
-          api
-            .post(
-              "projects",
-              { name: data.name, value },
-              {
-                headers: {
-                  Authorization: `Bearer ${session.user.token}`,
-                },
-              }
-            )
-            .then((res: { data: IProject }) => {
-              const tempProjects = projects;
-              tempProjects && tempProjects.push(res.data);
-              setProjects(tempProjects);
-              Swal.fire({
-                icon: "success",
-                title: "Tudo certo!",
-                text: "Projeto cadastrado com Sucesso",
-              });
-            })
-            .catch((error) => {
-              console.log("error (project) = ", error.message);
-              Swal.fire({
-                icon: "error",
-                title: "Opss...",
-                text: error.message,
-              });
-            });
-        }
-      })
-      .catch((error) => console.log("error = ", error.message));
-  };
-
-  const customStyles = {
-    content: {
-      top: '50%',
-      left: '50%',
-      right: 'auto',
-      bottom: 'auto',
-      marginRight: '-50%',
-      transform: 'translate(-50%, -50%)',
-    },
-  };
-
-  return (
-    <Modal
-        isOpen={modalIsOpen}
-        style={customStyles}
-        contentLabel="Example Modal"
-      >
-      <Card>
-        <Card.Header>
-          <h1>Cadastrar Projeto</h1>
-        </Card.Header>
-        <Card.Body>
-          <FormProvider {...methods}>
-            <Form onSubmit={methods.handleSubmit(onSubmit)}>
-              <FormProject />
-            </Form>
-          </FormProvider>
-        </Card.Body>
-      </Card>
-    </Modal>
-  )
-}
-
 const Home: React.FC = () => {
   const router = useRouter();
   const [loading, setLoading] = useState(true);
   const [user, setUser] = useState<IUserHome>();
   const [projects, setProjects] = useState<Array<IProject>>([]);
-  const [modalIsOpen, setIsOpen] = useState(false);
+  const [modalIsOpen, setIsOpen] = useState<boolean>(false);
 
 
   useEffect(() => {
