@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useContext, createContext } from "react";
+import React, { useState, useEffect, createContext } from "react";
 import { useRouter } from "next/router";
 import { getSession } from "next-auth/client";
 import { Form, Button } from "react-bootstrap";
@@ -19,16 +19,22 @@ export interface IUser {
   username: string
 }
 
+export interface IPartner {
+  username: string;
+  value: number;
+  email: string;
+}
+
 export interface IProject {
   name: string;
   value: number;
-  partners: Array<IUser>
+  partners: Array<IPartner>
 }
 
 export interface IContextHome {
   user: IUserHome;
   setUser: React.Dispatch<React.SetStateAction<IUserHome | undefined>>
-  projects: Array<IProject> | []
+  projects: Array<IProject>
   setProjects: React.Dispatch<React.SetStateAction<IProject[]>>
   modalIsOpen: boolean
   setIsOpen: React.Dispatch<React.SetStateAction<boolean>>
@@ -38,39 +44,6 @@ export interface IContextHome {
 }
 
 export const HomeContext = createContext({} as IContextHome)
-
-const FormProject: React.FC = () => {
-  const { register } = useFormContext();
-
-  return (
-    <>
-      <Form.Group className="mb-3">
-        <Form.Label>Nome</Form.Label>
-        <Form.Control
-          type="text"
-          required
-          placeholder="Nome do projeto"
-          {...register("name")}
-        />
-      </Form.Group>
-
-      <Form.Group className="mb-3">
-        <Form.Label>Valor (R$)</Form.Label>
-        <Form.Control
-          required
-          step={0.01}
-          type="number"
-          placeholder="Valor total do projeto"
-          {...register("value")}
-        />
-      </Form.Group>
-
-      <Form.Group className="mb-3 flex-center-x">
-        <Button type="submit">Cadastrar</Button>
-      </Form.Group>
-    </>
-  );
-};
 
 const Home: React.FC = () => {
   const router = useRouter();

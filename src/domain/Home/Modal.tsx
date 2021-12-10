@@ -6,12 +6,12 @@ import Modal from 'react-modal'
 
 import { HomeContext, IProject } from '../../pages/home';
 import { api } from '../../service/api';
-import { Card, Form } from 'react-bootstrap';
+import { Button, Card, Form } from 'react-bootstrap';
 import FormProject from './NewProject';
 
 const ModalFormProject: React.FC = () => {
 
-    const {modalIsOpen, projects, setProjects} = useContext(HomeContext)
+    const {modalIsOpen, projects, setProjects, setIsOpen} = useContext(HomeContext)
   
     const methods = useForm();
   
@@ -32,13 +32,13 @@ const ModalFormProject: React.FC = () => {
               )
               .then((res: { data: IProject }) => {
                 const tempProjects = projects;
-                tempProjects && tempProjects.push(res.data);
+                tempProjects && tempProjects.push(res?.data);
                 setProjects(tempProjects);
                 Swal.fire({
                   icon: "success",
                   title: "Tudo certo!",
                   text: "Projeto cadastrado com Sucesso",
-                });
+                }).then(() => setIsOpen(false));
               })
               .catch((error) => {
                 console.log("error (project) = ", error.message);
@@ -62,6 +62,7 @@ const ModalFormProject: React.FC = () => {
         marginRight: '-50%',
         transform: 'translate(-50%, -50%)',
       },
+      overlay: {background: "rgba(3, 3, 3, 0.1)"}
     };
   
     return (
@@ -71,8 +72,9 @@ const ModalFormProject: React.FC = () => {
           contentLabel="Example Modal"
         >
         <Card>
-          <Card.Header>
-            <h1>Cadastrar Projeto</h1>
+          <Card.Header className="flex-end-x flex-wrap">
+            <Button size='sm' variant='outline-danger' className="border" onClick={() => setIsOpen(!modalIsOpen)}>x</Button>
+            <h1 className="d-block w-100">Cadastrar Projeto</h1>
           </Card.Header>
           <Card.Body>
             <FormProvider {...methods}>

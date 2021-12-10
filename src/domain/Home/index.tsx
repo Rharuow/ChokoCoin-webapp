@@ -1,41 +1,45 @@
 import React, { useContext } from 'react'
-import { Card } from 'react-bootstrap'
+import { Button, Card } from 'react-bootstrap'
 
 import { HomeContext } from '../../pages/home'
 import ModalFormProject from './Modal'
 
 const Content: React.FC = () => {
-    const {user, projects} = useContext(HomeContext)
+    const {user, projects, modalIsOpen, setIsOpen} = useContext(HomeContext)
 
     return (
       <div className="h-100vh-min bg-dark">
         <ModalFormProject />
-        <div className="flex-center-y-around-x flex-wrap">
-          <Card className="h-100">
+        <div className="flex-center-x-y flex-wrap flex-column h-100vh">
+          <Card>
             <Card.Header>
               <h1 className="text-center">Bem vindo {user?.username}</h1>
             </Card.Header>
             <Card.Body>
               <h2>Projetos:</h2>
+              {projects &&
+                projects.map((project) => (
+                  <Card key={project.name}>
+                    <Card.Body>
+                      <p>nome: {project.name}</p>
+                      <p>valor: {project.value}</p>
+                      {
+                        project && project?.partners && project?.partners.length > 0 && project.partners.map((partner, index) => (
+                          <div key={index}>
+                            <p>Participantes</p>
+                              <li>Nome: {partner.username}</li>
+                              <li>Valor: {partner.value}</li>
+                          </div>
+                        ))
+                      }
+                    </Card.Body>
+                  </Card>
+                ))
+              }
             </Card.Body>
           </Card>
-        </div>
-        <div className="flex-center-y-around-x flex-wrap">
-          {projects &&
-            projects.map((project) => (
-              <Card key={project.name}>
-                <Card.Header><h1>Projetos</h1></Card.Header>
-                <Card.Body>
-                  <p>nome: {project.name}</p>
-                  <p>valor: {project.value}</p>
-                </Card.Body>
-                <Card.Footer><h2>Participantes</h2></Card.Footer>
-                <Card.Body>
-                  <li>Nome</li>
-                  <li>Valor</li>
-                </Card.Body>
-              </Card>
-            ))}
+          
+          <Button onClick={() => setIsOpen(!modalIsOpen)} className="mt-5 rounded-circle">+</Button>
         </div>
       </div>
     )
