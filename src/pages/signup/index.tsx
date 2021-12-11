@@ -68,9 +68,8 @@ const Login: React.FC = () => {
           title: "Feito",
           text: `${data.username} foi cadastrado com sucesso`,
           icon: "success",
-        }).then(() => {
-          router.push("/login");
         });
+        router.push(`/registration#${data.email}`);
       })
       .catch((error) => {
         console.log(error.message);
@@ -84,7 +83,7 @@ const Login: React.FC = () => {
 
   return (
     <div className="d-flex justify-content-center align-items-center h-100vh-min bg-dark px-5">
-      <Card className="w-50">
+      <Card className="w-75">
         <Card.Header className="text-center">Cadastrar</Card.Header>
         <Card.Body>
           <FormProvider {...methods}>
