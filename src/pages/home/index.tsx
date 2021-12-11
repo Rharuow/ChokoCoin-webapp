@@ -1,22 +1,15 @@
 import React, { useState, useEffect, createContext } from "react";
 import { useRouter } from "next/router";
 import { getSession } from "next-auth/client";
-import { Form, Button } from "react-bootstrap";
-import { useFormContext } from "react-hook-form";
 
-import Content from "../../domain/Home"
+import Content from "../../domain/Home";
 import { api, awakeServer } from "../../service/api";
 
 export interface IUserHome {
   id: string;
   email: string;
   username: string;
-  projects: [{ name: string; value: number; }];
-}
-
-export interface IUser {
-  email: string;
-  username: string
+  projects: [{ name: string; value: number }];
 }
 
 export interface IPartner {
@@ -28,22 +21,21 @@ export interface IPartner {
 export interface IProject {
   name: string;
   value: number;
-  partners: Array<IPartner>
+  partners: Array<IPartner>;
 }
 
 export interface IContextHome {
   user: IUserHome;
-  setUser: React.Dispatch<React.SetStateAction<IUserHome | undefined>>
-  projects: Array<IProject>
-  setProjects: React.Dispatch<React.SetStateAction<IProject[]>>
-  modalIsOpen: boolean
-  setIsOpen: React.Dispatch<React.SetStateAction<boolean>>
-  loading: boolean
-  setLoading: React.Dispatch<React.SetStateAction<boolean>>
-
+  setUser: React.Dispatch<React.SetStateAction<IUserHome | undefined>>;
+  projects: Array<IProject>;
+  setProjects: React.Dispatch<React.SetStateAction<IProject[]>>;
+  modalIsOpen: boolean;
+  setIsOpen: React.Dispatch<React.SetStateAction<boolean>>;
+  loading: boolean;
+  setLoading: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
-export const HomeContext = createContext({} as IContextHome)
+export const HomeContext = createContext({} as IContextHome);
 
 const Home: React.FC = () => {
   const router = useRouter();
@@ -52,12 +44,20 @@ const Home: React.FC = () => {
   const [projects, setProjects] = useState<Array<IProject>>([]);
   const [modalIsOpen, setIsOpen] = useState<boolean>(false);
 
-
   useEffect(() => {
     getSession()
       .then(async (session) => {
-        console.log(session);
         if (session) {
+          api
+            .get("user", {
+              headers: {
+                Authorization: `Bearer ${session.user.token}`,
+              },
+            })
+            .then((res) => console.log(" home > session", res.data))
+            .catch((err) => {
+              router.push("/");
+            });
           api
             .get("projects", {
               headers: {
@@ -90,7 +90,18 @@ const Home: React.FC = () => {
   }, []);
 
   return (
-    <HomeContext.Provider value={{user: user!, setUser, projects, setProjects, modalIsOpen, setIsOpen, loading, setLoading}}>
+    <HomeContext.Provider
+      value={{
+        user: user!,
+        setUser,
+        projects,
+        setProjects,
+        modalIsOpen,
+        setIsOpen,
+        loading,
+        setLoading,
+      }}
+    >
       <Content />
     </HomeContext.Provider>
   );

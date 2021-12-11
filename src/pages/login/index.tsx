@@ -6,7 +6,7 @@ import { useForm, FormProvider, useFormContext } from "react-hook-form";
 import { getCsrfToken, getSession } from "next-auth/client";
 import Swal from "sweetalert2";
 
-import { nextAuth, awakeServer } from "../../service/api";
+import { nextAuth, awakeServer, authorization } from "../../service/api";
 
 const LoginForm: React.FC = () => {
   const { register } = useFormContext();
@@ -86,28 +86,22 @@ const Login: React.FC = () => {
 
   useEffect(() => {
     awakeServer;
-    getSession()
-      .then((session) => {
-        if (session) {
-          Swal.fire({
-            icon: "success",
-            title: "Sessão ativa",
-            text: "Você já fez login no sistema",
-          }).then(() => {
-            router.push("/home");
-          });
-        } else if (callbackUrl) {
-          router.push(`${callbackUrl}`);
-        }
-      })
-      .catch((err) => {
-        console.log("Error session = ", err);
+
+    if (authorization().status) {
+      Swal.fire({
+        icon: "success",
+        title: "Sessão ativa",
+        text: "Você já fez login no sistema",
+      }).then(() => {
+        router.push("/home");
       });
+      router.push(`${callbackUrl}`);
+    }
     setLoading(false);
   }, []);
 
   return (
-    <div className="d-flex justify-content-center align-items-center h-100vh bg-dark px-5">
+    <div className="d-flex justify-content-center align-items-center h-100vh-min bg-dark px-5">
       <Card className="w-50">
         <Card.Header className="text-center">Login</Card.Header>
         <Card.Body className="bg-secondary">

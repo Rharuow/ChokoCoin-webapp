@@ -83,7 +83,7 @@ const Login: React.FC = () => {
   };
 
   return (
-    <div className="d-flex justify-content-center align-items-center h-100vh bg-dark px-5">
+    <div className="d-flex justify-content-center align-items-center h-100vh-min bg-dark px-5">
       <Card className="w-50">
         <Card.Header className="text-center">Cadastrar</Card.Header>
         <Card.Body>
