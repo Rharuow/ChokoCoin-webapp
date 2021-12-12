@@ -45,48 +45,7 @@ const Home: React.FC = () => {
   const [modalIsOpen, setIsOpen] = useState<boolean>(false);
 
   useEffect(() => {
-    getSession()
-      .then(async (session) => {
-        if (session) {
-          api
-            .get("user", {
-              headers: {
-                Authorization: `Bearer ${session.user.token}`,
-              },
-            })
-            .then((res) => console.log(" home > session", res.data))
-            .catch((err) => {
-              router.push("/");
-            });
-          api
-            .get("projects", {
-              headers: {
-                Authorization: `Bearer ${session.user.token}`,
-              },
-            })
-            .then((res) => {
-              setProjects(res.data);
-            })
-            .catch((error) => console.log(error.message));
-          api
-            .get("user", {
-              headers: {
-                Authorization: `Bearer ${session.user.token}`,
-              },
-            })
-            .then((res) => {
-              setUser(res.data);
-            })
-            .catch((error) => console.log(error.message));
-          setLoading(false);
-        } else {
-          router.push("/");
-        }
-      })
-      .catch((err) => {
-        console.log(" GET SESSION ERROR = ", err);
-      });
-    awakeServer.then();
+    awakeServer;
   }, []);
 
   return (

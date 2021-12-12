@@ -64,15 +64,16 @@ const Login: React.FC = () => {
     api
       .post("users", data, { headers: { secret: data.key } })
       .then((res) => {
+        console.log("signup then => ", res.data);
         Swal.fire({
           title: "Feito",
           text: `${data.username} foi cadastrado com sucesso`,
           icon: "success",
         });
-        router.push(`/registration#${data.email}`);
+        router.push(`signup/registration#${data.email}`);
       })
       .catch((error) => {
-        console.log(error.message);
+        console.log(" catch error => ", error.message);
         Swal.fire({
           title: "Hmm...",
           text: `Alguma coisa não parece certa!`,

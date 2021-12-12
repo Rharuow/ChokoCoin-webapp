@@ -76,6 +76,7 @@ const Login: React.FC = () => {
         setLoading(false);
       })
       .catch((error) => {
+        console.log("error.message", error.message);
         Swal.fire({
           icon: "error",
           title: "Oops...",
@@ -85,18 +86,21 @@ const Login: React.FC = () => {
   };
 
   useEffect(() => {
-    awakeServer;
-
-    if (authorization().status) {
-      Swal.fire({
-        icon: "success",
-        title: "Sessão ativa",
-        text: "Você já fez login no sistema",
-      }).then(() => {
-        router.push("/home");
-      });
-      router.push(`${callbackUrl}`);
-    }
+    // awakeServer;
+    async () => {
+      const auth = await authorization();
+      console.log("auth = ", auth);
+      if (auth.status) {
+        Swal.fire({
+          icon: "success",
+          title: "Sessão ativa",
+          text: "Você já fez login no sistema",
+        }).then(() => {
+          router.push("/home");
+        });
+        router.push(`${callbackUrl}`);
+      }
+    };
     setLoading(false);
   }, []);
 

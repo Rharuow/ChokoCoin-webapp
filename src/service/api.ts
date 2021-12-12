@@ -10,7 +10,7 @@ axios.defaults.paramsSerializer = (params) =>
 
 const api = axios.create({
   baseURL: process.env.NEXT_PUBLIC_API_BASEPATH,
-  timeout: 1000,
+  // timeout: 1000,
   headers: { "Content-Type": "application/json" },
 });
 
@@ -28,30 +28,24 @@ const nextAuth = axios.create({
   // headers: { Origin: `${process.env.NEXT_PUBLIC_SITE_URL}` },
 });
 
-const authorization: () => IAuthorization = () => {
+const authorization: () => Promise<IAuthorization> = async () => {
   const authorized: IAuthorization = {
     status: false,
     user: null,
   };
 
-  getSession().then(async (session) => {
-    if (session) {
-      api
-        .get("user", {
-          headers: {
-            Authorization: `Bearer ${session.user.token}`,
-          },
-        })
-        .then((res: { data: { user: ICurrentUser } }) => {
-          console.log("authorized = ", res.data);
-          authorized.status = true;
-          authorized.user = res.data.user;
-        })
-        .catch((err) => {
-          console.log("authorized = ", err);
-        });
-    }
-  });
+  const session = await getSession();
+
+  if (session) {
+    const user = await api.get("session", {
+      headers: {
+        Authorization: `Bearer ${session.user.token}`,
+      },
+    });
+    authorized.status = true;
+    authorized.user = user.data;
+    console.log("authorized = ", authorized);
+  }
 
   return authorized;
 };
