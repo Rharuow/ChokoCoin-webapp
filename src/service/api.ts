@@ -3,8 +3,6 @@ import { getSession } from "next-auth/client";
 import qs from "qs";
 import { IAuthorization } from "../../types/IAuthorization";
 
-import { ICurrentUser } from "../../types/IUser";
-
 axios.defaults.paramsSerializer = (params) =>
   qs.stringify(params, { arrayFormat: "brackets" });
 

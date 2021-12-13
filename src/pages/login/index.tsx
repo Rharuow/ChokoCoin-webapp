@@ -98,10 +98,9 @@ const Login: React.FC = () => {
         }).then(() => {
           router.push("/home");
         });
-        router.push(`${callbackUrl}`);
       }
     };
-    getAuth().catch(err => console.log(err))
+    getAuth().catch((err) => console.log(err));
     setLoading(false);
   }, []);
 

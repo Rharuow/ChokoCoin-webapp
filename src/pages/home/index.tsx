@@ -1,6 +1,6 @@
 import React, { useState, useEffect, createContext } from "react";
 import { useRouter } from "next/router";
-import { getSession } from "next-auth/client";
+import { signOut } from "next-auth/client";
 
 import Content from "../../domain/Home";
 import { authorization, awakeServer } from "../../service/api";
@@ -8,7 +8,6 @@ import { IContextHome } from "../../../types/home/IContextHome";
 import { IUserHome } from "../../../types/home/IUserHome";
 import { IProject } from "../../../types/IProject";
 import { IAuthorization } from "../../../types/IAuthorization";
-
 
 export const HomeContext = createContext({} as IContextHome);
 
@@ -21,10 +20,12 @@ const Home: React.FC = () => {
 
   useEffect(() => {
     awakeServer;
-    authorization().then((res: IAuthorization) => {
-      if(res.user === null) return router.push('/login')
-      setUser(res.user)
-    })
+    authorization()
+      .then((res: IAuthorization) => {
+        if (res.user === null) return signOut({ callbackUrl: "/login" });
+        setUser(res.user);
+      })
+      .catch((err) => signOut({ callbackUrl: "/login" }));
   }, []);
 
   return (
