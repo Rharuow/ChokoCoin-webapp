@@ -1,7 +1,7 @@
 import { IPartner } from "./IPartner";
 
 export interface IProject {
-    name: string;
-    value: number;
-    partners: Array<IPartner>;
-  }
+  name: string;
+  value: string;
+  partners: Array<IPartner>;
+}
