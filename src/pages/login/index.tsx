@@ -86,8 +86,8 @@ const Login: React.FC = () => {
   };
 
   useEffect(() => {
-    // awakeServer;
-    async () => {
+    awakeServer;
+    const getAuth = async () => {
       const auth = await authorization();
       console.log("auth = ", auth);
       if (auth.status) {
@@ -101,6 +101,7 @@ const Login: React.FC = () => {
         router.push(`${callbackUrl}`);
       }
     };
+    getAuth().catch(err => console.log(err))
     setLoading(false);
   }, []);
 

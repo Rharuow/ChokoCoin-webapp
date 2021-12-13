@@ -2,6 +2,7 @@ import Link from "next/link";
 import { useRouter } from "next/router";
 import React, { useEffect } from "react";
 import { Alert } from "react-bootstrap";
+import Swal from "sweetalert2";
 import { api } from "../../service/api";
 
 const Confirmation: React.FC = () => {
@@ -10,13 +11,20 @@ const Confirmation: React.FC = () => {
   const { email, token } = router.query as { email: string; token: string };
 
   useEffect(() => {
-    if (email) {
-      console.log("email and token = ", email, token);
-      async () =>
+    if (email !== undefined ) {
+      const getConfirmation = async () =>
         await api.post("/users/confirmation", {
           email,
           token,
         });
+        
+      getConfirmation().catch(error => {
+        Swal.fire({
+        title: "Hmm...",
+        text: `Essa conta me parece já estar registrada!`,
+        icon: "info",
+      });
+      })
     }
   }, [email, token]);
 

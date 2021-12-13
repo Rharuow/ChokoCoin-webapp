@@ -1,6 +1,7 @@
+import { IUserHome } from "./home/IUserHome";
 import { ICurrentUser } from "./IUser";
 
 export interface IAuthorization {
   status: boolean;
-  user: ICurrentUser | null;
+  user:  IUserHome | null;
 }
