@@ -1,5 +1,4 @@
 import React, { useState, useEffect, createContext } from "react";
-import { useRouter } from "next/router";
 import { signOut } from "next-auth/client";
 
 import Content from "../../domain/Home";
@@ -8,15 +7,24 @@ import { IContextHome } from "../../../types/home/IContextHome";
 import { IUserHome } from "../../../types/home/IUserHome";
 import { IProject } from "../../../types/IProject";
 import { IAuthorization } from "../../../types/IAuthorization";
+import { getProjects } from "../../service/getProjects";
 
 export const HomeContext = createContext({} as IContextHome);
 
 const Home: React.FC = () => {
-  const router = useRouter();
   const [loading, setLoading] = useState(true);
   const [user, setUser] = useState<IUserHome>();
   const [projects, setProjects] = useState<Array<IProject>>([]);
   const [modalIsOpen, setIsOpen] = useState<boolean>(false);
+
+  const tempProjects = projects;
+  getProjects().then((res) => {
+    console.log(res);
+    if (res !== null) {
+      tempProjects.push(res);
+      setProjects(tempProjects);
+    }
+  });
 
   useEffect(() => {
     awakeServer;
@@ -26,7 +34,7 @@ const Home: React.FC = () => {
         setUser(res.user);
       })
       .catch((err) => signOut({ callbackUrl: "/login" }));
-  }, []);
+  }, [projects]);
 
   return (
     <HomeContext.Provider
