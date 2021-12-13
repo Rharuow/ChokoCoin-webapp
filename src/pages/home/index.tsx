@@ -3,37 +3,12 @@ import { useRouter } from "next/router";
 import { getSession } from "next-auth/client";
 
 import Content from "../../domain/Home";
-import { api, awakeServer } from "../../service/api";
+import { authorization, awakeServer } from "../../service/api";
+import { IContextHome } from "../../../types/home/IContextHome";
+import { IUserHome } from "../../../types/home/IUserHome";
+import { IProject } from "../../../types/IProject";
+import { IAuthorization } from "../../../types/IAuthorization";
 
-export interface IUserHome {
-  id: string;
-  email: string;
-  username: string;
-  projects: [{ name: string; value: number }];
-}
-
-export interface IPartner {
-  username: string;
-  value: number;
-  email: string;
-}
-
-export interface IProject {
-  name: string;
-  value: number;
-  partners: Array<IPartner>;
-}
-
-export interface IContextHome {
-  user: IUserHome;
-  setUser: React.Dispatch<React.SetStateAction<IUserHome | undefined>>;
-  projects: Array<IProject>;
-  setProjects: React.Dispatch<React.SetStateAction<IProject[]>>;
-  modalIsOpen: boolean;
-  setIsOpen: React.Dispatch<React.SetStateAction<boolean>>;
-  loading: boolean;
-  setLoading: React.Dispatch<React.SetStateAction<boolean>>;
-}
 
 export const HomeContext = createContext({} as IContextHome);
 
@@ -46,6 +21,10 @@ const Home: React.FC = () => {
 
   useEffect(() => {
     awakeServer;
+    authorization().then((res: IAuthorization) => {
+      if(res.user === null) return router.push('/login')
+      setUser(res.user)
+    })
   }, []);
 
   return (
