@@ -10,6 +10,8 @@ const Content: React.FC = () => {
   const { user, projects, modalIsOpen, setIsOpen, loading, setLoading } =
     useContext(HomeContext);
 
+  console.log("projects = ", projects);
+
   useEffect(() => {
     projects && setLoading(false);
   }, [projects, setLoading]);
@@ -46,16 +48,18 @@ const Content: React.FC = () => {
                   projects.map((project) => (
                     <Card key={project.name}>
                       <Card.Body>
-                        <p>nome: {project.name}</p>
-                        <p>valor: {project.value}</p>
-                        {project &&
-                          project?.partners &&
-                          project?.partners.length > 0 &&
-                          project.partners.map((partner, index) => (
-                            <div key={index}>
-                              <p>Participantes</p>
-                              <li>Nome: {partner.username}</li>
-                              <li>Valor: {partner.value}</li>
+                        <p>Nome: {project.name}</p>
+                        <p>Valor: {project.value}</p>
+                        {project?.partners?.length > 0 &&
+                          project.partners.map((partner) => (
+                            <div key={partner.email}>
+                              <hr />
+                              <p>
+                                <strong>Nome:</strong> {partner.username}
+                              </p>
+                              <p>
+                                <strong>Valor:</strong> {partner.value}
+                              </p>
                             </div>
                           ))}
                       </Card.Body>

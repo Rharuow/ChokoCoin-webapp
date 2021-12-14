@@ -19,12 +19,10 @@ const Home: React.FC = () => {
 
   useEffect(() => {
     awakeServer;
-    const tempProjects = projects || [];
     getProjects().then((res) => {
       console.log(res);
       if (res !== null) {
-        tempProjects.push(res);
-        setProjects(tempProjects);
+        setProjects(res);
       }
     });
     authorization()
@@ -33,7 +31,7 @@ const Home: React.FC = () => {
         setUser(res.user);
       })
       .catch((err) => signOut({ callbackUrl: "/login" }));
-  }, [projects]);
+  }, []);
 
   return (
     <HomeContext.Provider

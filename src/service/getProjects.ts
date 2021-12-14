@@ -2,7 +2,7 @@ import { getSession } from "next-auth/client";
 import { IProject } from "../../types/IProject";
 import { api, authorization } from "./api";
 
-export const getProjects: () => Promise<IProject | null> = async () => {
+export const getProjects: () => Promise<Array<IProject> | null> = async () => {
   const auth = await authorization();
   const session = await getSession();
   if (auth.status && session) {
@@ -10,7 +10,7 @@ export const getProjects: () => Promise<IProject | null> = async () => {
       headers: {
         Authorization: `Bearer ${session?.user.token}`,
       },
-    })) as { data: IProject };
+    })) as { data: Array<IProject> };
     return data;
   }
   return null;
