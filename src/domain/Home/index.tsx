@@ -1,5 +1,5 @@
 import { signOut } from "next-auth/client";
-import React, { useContext } from "react";
+import React, { useContext, useEffect } from "react";
 import { Button, Card } from "react-bootstrap";
 import ReactLoading from "react-loading";
 
@@ -10,9 +10,13 @@ const Content: React.FC = () => {
   const { user, projects, modalIsOpen, setIsOpen, loading, setLoading } =
     useContext(HomeContext);
 
+  useEffect(() => {
+    projects && setLoading(false);
+  }, [projects, setLoading]);
+
   return (
     <div className="h-100vh-min bg-dark">
-      {loading ? (
+      {loading && projects ? (
         <div className="d-flex align-items-center justify-content-center h-100vh">
           <ReactLoading type="spin" />
         </div>
@@ -32,8 +36,13 @@ const Content: React.FC = () => {
                 <h1 className="text-center">Bem vindo {user?.username}</h1>
               </Card.Header>
               <Card.Body>
-                <h2>{projects?.length > 0 ? "Projetos:" : "Sem projetos"}</h2>
-                {projects?.length > 0 &&
+                <h2>
+                  {projects && projects?.length > 0
+                    ? "Projetos:"
+                    : "Sem projetos"}
+                </h2>
+                {projects &&
+                  projects?.length > 0 &&
                   projects.map((project) => (
                     <Card key={project.name}>
                       <Card.Body>

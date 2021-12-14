@@ -14,20 +14,19 @@ export const HomeContext = createContext({} as IContextHome);
 const Home: React.FC = () => {
   const [loading, setLoading] = useState(true);
   const [user, setUser] = useState<IUserHome>();
-  const [projects, setProjects] = useState<Array<IProject>>([]);
+  const [projects, setProjects] = useState<Array<IProject>>();
   const [modalIsOpen, setIsOpen] = useState<boolean>(false);
-
-  const tempProjects = projects;
-  getProjects().then((res) => {
-    console.log(res);
-    if (res !== null) {
-      tempProjects.push(res);
-      setProjects(tempProjects);
-    }
-  });
 
   useEffect(() => {
     awakeServer;
+    const tempProjects = projects || [];
+    getProjects().then((res) => {
+      console.log(res);
+      if (res !== null) {
+        tempProjects.push(res);
+        setProjects(tempProjects);
+      }
+    });
     authorization()
       .then((res: IAuthorization) => {
         if (res.user === null) return signOut({ callbackUrl: "/login" });
