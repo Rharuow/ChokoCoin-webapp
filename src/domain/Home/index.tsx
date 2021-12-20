@@ -1,16 +1,28 @@
-import { signOut } from "next-auth/client";
+import { getSession, signOut } from "next-auth/client";
 import React, { useContext, useEffect } from "react";
 import { Button, Card } from "react-bootstrap";
 import ReactLoading from "react-loading";
 
 import { HomeContext } from "../../pages/home";
+import { api } from "../../service/api";
 import ModalFormProject from "./Modal";
 
 const Content: React.FC = () => {
   const { user, projects, modalIsOpen, setIsOpen, loading, setLoading } =
     useContext(HomeContext);
 
-  console.log("projects = ", projects);
+  const handleDeletePoject = (id: string) => {
+    getSession().then(session => {
+      if(session) {
+        api.delete(`projects?id=${id}`, {
+          headers: {
+            Authorization: `Bearer ${session.user.token}`,
+          },
+        })
+      }
+    })
+
+  }
 
   useEffect(() => {
     projects && setLoading(false);
@@ -62,6 +74,7 @@ const Content: React.FC = () => {
                               </p>
                             </div>
                           ))}
+                          <Button variant="danger" onClick={() => handleDeletePoject(project.id)}>Delete</Button>
                       </Card.Body>
                     </Card>
                   ))}

@@ -20,10 +20,7 @@ const Home: React.FC = () => {
   useEffect(() => {
     awakeServer;
     getProjects().then((res) => {
-      console.log(res);
-      if (res !== null) {
-        setProjects(res);
-      }
+      if (res !== null) setProjects(res);
     });
     authorization()
       .then((res: IAuthorization) => {
