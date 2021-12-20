@@ -2,6 +2,7 @@ import { getSession, signOut } from "next-auth/client";
 import React, { useContext, useEffect } from "react";
 import { Button, Card } from "react-bootstrap";
 import ReactLoading from "react-loading";
+import Swal from "sweetalert2";
 
 import { HomeContext } from "../../pages/home";
 import { api } from "../../service/api";
@@ -12,17 +13,26 @@ const Content: React.FC = () => {
     useContext(HomeContext);
 
   const handleDeletePoject = (id: string) => {
-    getSession().then(session => {
-      if(session) {
-        api.delete(`projects?id=${id}`, {
-          headers: {
-            Authorization: `Bearer ${session.user.token}`,
-          },
-        })
+    getSession().then((session) => {
+      if (session) {
+        api
+          .delete(`projects/${id}`, {
+            headers: {
+              Authorization: `Bearer ${session.user.token}`,
+            },
+          })
+          .then((res) => {
+            Swal.fire({
+              icon: "success",
+              title: "Tudo certo!",
+              text: "Projeto Deletado com Sucesso",
+            });
+            console.log("delete project", res.data);
+          })
+          .catch((err) => console.log(err));
       }
-    })
-
-  }
+    });
+  };
 
   useEffect(() => {
     projects && setLoading(false);
@@ -74,7 +84,12 @@ const Content: React.FC = () => {
                               </p>
                             </div>
                           ))}
-                          <Button variant="danger" onClick={() => handleDeletePoject(project.id)}>Delete</Button>
+                        <Button
+                          variant="danger"
+                          onClick={() => handleDeletePoject(project.id)}
+                        >
+                          Delete
+                        </Button>
                       </Card.Body>
                     </Card>
                   ))}

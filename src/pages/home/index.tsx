@@ -17,6 +17,8 @@ const Home: React.FC = () => {
   const [projects, setProjects] = useState<Array<IProject>>();
   const [modalIsOpen, setIsOpen] = useState<boolean>(false);
 
+  console.log("projects = ", projects);
+
   useEffect(() => {
     awakeServer;
     getProjects().then((res) => {
