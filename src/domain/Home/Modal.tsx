@@ -17,7 +17,7 @@ const ModalFormProject: React.FC = () => {
   const methods = useForm();
 
   const onSubmit: (data: { name: string; value: string }) => void = (data) => {
-    console.log(data);
+    console.log(" Form New project = ", data);
     getSession()
       .then((session) => {
         if (session) {
@@ -31,10 +31,9 @@ const ModalFormProject: React.FC = () => {
                 },
               }
             )
-            .then((res: { data: IProject }) => {
-              const tempProjects = projects;
-              tempProjects && tempProjects.push(res?.data);
-              setProjects(tempProjects);
+            .then((res: { data: Array<IProject> }) => {
+              console.log(" Res New project = ", res?.data);
+              setProjects(res?.data);
               Swal.fire({
                 icon: "success",
                 title: "Tudo certo!",
