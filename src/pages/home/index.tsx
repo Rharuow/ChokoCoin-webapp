@@ -8,6 +8,8 @@ import { IUserHome } from "../../../types/home/IUserHome";
 import { IProject } from "../../../types/IProject";
 import { IAuthorization } from "../../../types/IAuthorization";
 import { getProjects } from "../../service/getProjects";
+import { IUser } from "../../../types/IUser";
+import { getUsers } from "../../service/getUsers";
 
 export const HomeContext = createContext({} as IContextHome);
 
@@ -16,11 +18,16 @@ const Home: React.FC = () => {
   const [user, setUser] = useState<IUserHome>();
   const [projects, setProjects] = useState<Array<IProject>>();
   const [modalIsOpen, setIsOpen] = useState<boolean>(false);
+  const [users, setUsers] = useState<Array<IUser>>();
 
   useEffect(() => {
     awakeServer;
     getProjects().then((res) => {
       if (res !== null) setProjects(res);
+    });
+    getUsers().then((res) => {
+      console.log("users = ", res);
+      if (res !== null) setUsers(res);
     });
     authorization()
       .then((res: IAuthorization) => {
@@ -34,6 +41,8 @@ const Home: React.FC = () => {
     <HomeContext.Provider
       value={{
         user: user!,
+        users,
+        setUsers,
         setUser,
         projects,
         setProjects,

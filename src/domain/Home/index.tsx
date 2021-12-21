@@ -4,6 +4,7 @@ import { Button, Card } from "react-bootstrap";
 import ReactLoading from "react-loading";
 import Swal from "sweetalert2";
 import { IProject } from "../../../types/IProject";
+import CardProject from "../../components/project/Card";
 
 import { HomeContext } from "../../pages/home";
 import { api } from "../../service/api";
@@ -18,9 +19,10 @@ const Content: React.FC = () => {
     setIsOpen,
     loading,
     setLoading,
+    users,
   } = useContext(HomeContext);
 
-  const handleDeletePoject = (id: string) => {
+  const handleDeleteProject: (id: string) => void = (id: string) => {
     getSession().then((session) => {
       if (session) {
         api
@@ -41,8 +43,6 @@ const Content: React.FC = () => {
       }
     });
   };
-
-  console.log("projects = ", projects);
 
   useEffect(() => {
     projects && setLoading(false);
@@ -69,40 +69,29 @@ const Content: React.FC = () => {
               <Card.Header>
                 <h1 className="text-center">{user?.username}</h1>
               </Card.Header>
-              <Card.Body>
-                <h2>
-                  {projects && projects?.length > 0
-                    ? "Projetos:"
-                    : "Sem projetos"}
-                </h2>
-                {projects &&
-                  projects?.length > 0 &&
-                  projects.map((project) => (
-                    <Card key={project.name} className="my-3">
-                      <Card.Body>
-                        <p>Nome: {project.name}</p>
-                        <p>Valor: {project.value}</p>
-                        {project?.partners?.length > 0 &&
-                          project.partners.map((partner, index) => (
-                            <div key={index}>
-                              <hr />
-                              <p>
-                                <strong>Nome:</strong> {partner.username}
-                              </p>
-                              <p>
-                                <strong>Valor:</strong> {partner.value}
-                              </p>
-                            </div>
-                          ))}
-                        <Button
-                          variant="danger"
-                          onClick={() => handleDeletePoject(project.id)}
-                        >
-                          Delete
-                        </Button>
-                      </Card.Body>
-                    </Card>
+              <Card.Body className="d-flex flex-wrap">
+                <div className="projects me-3">
+                  <h2 className="text-center">
+                    {projects && projects?.length > 0
+                      ? "Projetos"
+                      : "Sem projetos"}
+                  </h2>
+                  {projects &&
+                    projects?.length > 0 &&
+                    projects.map((project, index) => (
+                      <CardProject
+                        key={index}
+                        project={project}
+                        handleDeleteProject={handleDeleteProject}
+                      />
+                    ))}
+                </div>
+                <div className="users ms-3">
+                  <h2 className="text-center">Candidatos</h2>
+                  {users?.map((user, index) => (
+                    <p key={index}>{user.username}</p>
                   ))}
+                </div>
               </Card.Body>
             </Card>
 
