@@ -12,7 +12,7 @@ const CardProject: React.FC<{
 
   return (
     <Card className="my-3">
-      <Card.Body>
+      <Card.Body className="w-100">
         <p>Nome: {project.name}</p>
         <p>Valor: {project.value}</p>
         {project?.partners?.length > 0 &&

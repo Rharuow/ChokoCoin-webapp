@@ -5,6 +5,7 @@ import ReactLoading from "react-loading";
 import Swal from "sweetalert2";
 import { IProject } from "../../../types/IProject";
 import CardProject from "../../components/project/Card";
+import CardUser from "../../components/users/Card";
 
 import { HomeContext } from "../../pages/home";
 import { api } from "../../service/api";
@@ -69,7 +70,7 @@ const Content: React.FC = () => {
               <Card.Header>
                 <h1 className="text-center">{user?.username}</h1>
               </Card.Header>
-              <Card.Body className="d-flex flex-wrap">
+              <Card.Body className="flex-center-x flex-wrap">
                 <div className="projects me-3">
                   <h2 className="text-center">
                     {projects && projects?.length > 0
@@ -89,7 +90,13 @@ const Content: React.FC = () => {
                 <div className="users ms-3">
                   <h2 className="text-center">Candidatos</h2>
                   {users?.map((user, index) => (
-                    <p key={index}>{user.username}</p>
+                    <CardUser
+                      key={index}
+                      user={user}
+                      handleDeleteUser={() => {
+                        console.log("handle delete user");
+                      }}
+                    />
                   ))}
                 </div>
               </Card.Body>
