@@ -10,6 +10,7 @@ import { IAuthorization } from "../../../types/IAuthorization";
 import { getProjects } from "../../service/getProjects";
 import { IUser } from "../../../types/IUser";
 import { getUsers } from "../../service/getUsers";
+import { IModal } from "../../../types/IModal";
 
 export const HomeContext = createContext({} as IContextHome);
 
@@ -17,7 +18,10 @@ const Home: React.FC = () => {
   const [loading, setLoading] = useState(true);
   const [user, setUser] = useState<IUserHome>();
   const [projects, setProjects] = useState<Array<IProject>>();
-  const [modalIsOpen, setIsOpen] = useState<boolean>(false);
+  const [modalIsOpen, setIsOpen] = useState<IModal>({
+    createProject: false,
+    registrateUser: false,
+  });
   const [users, setUsers] = useState<Array<IUser>>();
 
   useEffect(() => {

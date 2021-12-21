@@ -14,6 +14,9 @@ const CardUser: React.FC<{
         <p>Nome: {user.username}</p>
         <hr />
         <p>email: {user.email}</p>
+        <div className="w-100 d-flex justify-content-center">
+          <Button size="sm">Inscrever</Button>
+        </div>
       </Card.Body>
     </Card>
   );

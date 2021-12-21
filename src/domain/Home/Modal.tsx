@@ -38,7 +38,9 @@ const ModalFormProject: React.FC = () => {
                 icon: "success",
                 title: "Tudo certo!",
                 text: "Projeto cadastrado com Sucesso",
-              }).then(() => setIsOpen(false));
+              }).then(() =>
+                setIsOpen({ ...modalIsOpen, createProject: false })
+              );
             })
             .catch((error) => {
               console.log("error (project) = ", error.message);
@@ -67,7 +69,7 @@ const ModalFormProject: React.FC = () => {
 
   return (
     <Modal
-      isOpen={modalIsOpen}
+      isOpen={modalIsOpen.createProject}
       style={customStyles}
       contentLabel="Example Modal"
     >
@@ -77,7 +79,12 @@ const ModalFormProject: React.FC = () => {
             size="sm"
             variant="outline-danger"
             className="border"
-            onClick={() => setIsOpen(!modalIsOpen)}
+            onClick={() =>
+              setIsOpen({
+                ...modalIsOpen,
+                createProject: !modalIsOpen.createProject,
+              })
+            }
           >
             x
           </Button>

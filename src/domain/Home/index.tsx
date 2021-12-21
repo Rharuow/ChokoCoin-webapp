@@ -103,7 +103,15 @@ const Content: React.FC = () => {
             </Card>
 
             {user?.is_admin && (
-              <Button onClick={() => setIsOpen(!modalIsOpen)} className="mt-5">
+              <Button
+                onClick={() =>
+                  setIsOpen({
+                    ...modalIsOpen,
+                    createProject: !modalIsOpen.createProject,
+                  })
+                }
+                className="mt-5"
+              >
                 Cadastrar de projeto
               </Button>
             )}
