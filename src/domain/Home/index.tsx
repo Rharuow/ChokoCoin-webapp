@@ -3,13 +3,14 @@ import React, { useContext, useEffect } from "react";
 import { Button, Card } from "react-bootstrap";
 import ReactLoading from "react-loading";
 import Swal from "sweetalert2";
+import { IProject } from "../../../types/IProject";
 
 import { HomeContext } from "../../pages/home";
 import { api } from "../../service/api";
 import ModalFormProject from "./Modal";
 
 const Content: React.FC = () => {
-  const { user, projects, modalIsOpen, setIsOpen, loading, setLoading } =
+  const { user, projects, setProjects, modalIsOpen, setIsOpen, loading, setLoading } =
     useContext(HomeContext);
 
   const handleDeletePoject = (id: string) => {
@@ -21,18 +22,20 @@ const Content: React.FC = () => {
               Authorization: `Bearer ${session.user.token}`,
             },
           })
-          .then((res) => {
+          .then((res: {data: Array<IProject>}) => {
             Swal.fire({
               icon: "success",
               title: "Tudo certo!",
               text: "Projeto Deletado com Sucesso",
             });
-            console.log("delete project", res.data);
+            setProjects(res.data)
           })
           .catch((err) => console.log(err));
       }
     });
   };
+  
+  console.log("projects = ", projects);
 
   useEffect(() => {
     projects && setLoading(false);
@@ -73,8 +76,8 @@ const Content: React.FC = () => {
                         <p>Nome: {project.name}</p>
                         <p>Valor: {project.value}</p>
                         {project?.partners?.length > 0 &&
-                          project.partners.map((partner) => (
-                            <div key={partner.email}>
+                          project.partners.map((partner, index) => (
+                            <div key={index}>
                               <hr />
                               <p>
                                 <strong>Nome:</strong> {partner.username}
