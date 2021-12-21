@@ -10,8 +10,15 @@ import { api } from "../../service/api";
 import ModalFormProject from "./Modal";
 
 const Content: React.FC = () => {
-  const { user, projects, setProjects, modalIsOpen, setIsOpen, loading, setLoading } =
-    useContext(HomeContext);
+  const {
+    user,
+    projects,
+    setProjects,
+    modalIsOpen,
+    setIsOpen,
+    loading,
+    setLoading,
+  } = useContext(HomeContext);
 
   const handleDeletePoject = (id: string) => {
     getSession().then((session) => {
@@ -22,19 +29,19 @@ const Content: React.FC = () => {
               Authorization: `Bearer ${session.user.token}`,
             },
           })
-          .then((res: {data: Array<IProject>}) => {
+          .then((res: { data: Array<IProject> }) => {
             Swal.fire({
               icon: "success",
               title: "Tudo certo!",
               text: "Projeto Deletado com Sucesso",
             });
-            setProjects(res.data)
+            setProjects(res.data);
           })
           .catch((err) => console.log(err));
       }
     });
   };
-  
+
   console.log("projects = ", projects);
 
   useEffect(() => {
@@ -42,25 +49,25 @@ const Content: React.FC = () => {
   }, [projects, setLoading]);
 
   return (
-    <div className="h-100vh-min bg-dark">
+    <div className="h-100vh-min bg-dark p-3">
       {loading && projects ? (
-        <div className="d-flex align-items-center justify-content-center h-100vh">
+        <div className="d-flex align-items-center justify-content-center h-100">
           <ReactLoading type="spin" />
         </div>
       ) : (
         <>
           <ModalFormProject />
-          <div className="flex-center-x-y flex-wrap flex-column h-100vh">
+          <div className="flex-center-x-y flex-wrap flex-column h-100">
             <Button
               variant="danger"
-              className="position-absolute z-1 top-0 end-0"
+              className="align-self-end"
               onClick={() => signOut()}
             >
               Sair
             </Button>
             <Card>
               <Card.Header>
-                <h1 className="text-center">Bem vindo {user?.username}</h1>
+                <h1 className="text-center">{user?.username}</h1>
               </Card.Header>
               <Card.Body>
                 <h2>
@@ -71,7 +78,7 @@ const Content: React.FC = () => {
                 {projects &&
                   projects?.length > 0 &&
                   projects.map((project) => (
-                    <Card key={project.name}>
+                    <Card key={project.name} className="my-3">
                       <Card.Body>
                         <p>Nome: {project.name}</p>
                         <p>Valor: {project.value}</p>
