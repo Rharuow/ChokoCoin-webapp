@@ -14,7 +14,14 @@ const CardUser: React.FC<{
         <p>Nome: {user.username}</p>
         <hr />
         <p>email: {user.email}</p>
-        <div className="w-100 d-flex justify-content-center">
+        <div className="w-100 d-flex justify-content-around">
+          <Button
+            variant="danger"
+            size="sm"
+            onClick={() => handleDeleteUser(user.id)}
+          >
+            Excluir
+          </Button>
           <Button size="sm">Inscrever</Button>
         </div>
       </Card.Body>

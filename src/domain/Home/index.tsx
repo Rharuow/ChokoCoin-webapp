@@ -4,6 +4,7 @@ import { Button, Card } from "react-bootstrap";
 import ReactLoading from "react-loading";
 import Swal from "sweetalert2";
 import { IProject } from "../../../types/IProject";
+import { IUser } from "../../../types/IUser";
 import CardProject from "../../components/project/Card";
 import CardUser from "../../components/users/Card";
 
@@ -21,6 +22,7 @@ const Content: React.FC = () => {
     loading,
     setLoading,
     users,
+    setUsers,
   } = useContext(HomeContext);
 
   const handleDeleteProject: (id: string) => void = (id: string) => {
@@ -45,9 +47,35 @@ const Content: React.FC = () => {
     });
   };
 
+  const handleDeleteUser: (id: string) => void = (id: string) => {
+    setLoading(true);
+    getSession().then((session) => {
+      if (session) {
+        console.log("sessison => ", session);
+        api
+          .delete(`users/${id}`, {
+            headers: {
+              Authorization: `Bearer ${session.user.token}`,
+            },
+          })
+          .then((res: { data: { users: Array<IUser> | undefined } }) => {
+            setUsers(res.data.users);
+            Swal.fire({
+              icon: "success",
+              title: "Tudo certo!",
+              text: "Usuário Deletado com Sucesso",
+            }).then(() => setLoading(false));
+          })
+          .catch((err) => console.log("err ", err));
+      }
+      setLoading(false);
+    });
+  };
+
   useEffect(() => {
-    user && users && projects && setLoading(false);
-  }, [projects, setLoading, user, users]);
+    console.log(users);
+    user && projects && setLoading(false);
+  }, [projects, setLoading, user]);
 
   return (
     <div className="h-100vh-min bg-dark p-3">
@@ -66,12 +94,12 @@ const Content: React.FC = () => {
             >
               Sair
             </Button>
-            <Card>
+            <Card className="w-60-min">
               <Card.Header>
                 <h1 className="text-center">{user?.username}</h1>
               </Card.Header>
               <Card.Body className="flex-center-x flex-wrap">
-                <div className="projects me-3">
+                <div className="projects me-3 w-40-min">
                   <h2 className="text-center">
                     {projects && projects?.length > 0
                       ? "Projetos"
@@ -87,20 +115,22 @@ const Content: React.FC = () => {
                       />
                     ))}
                 </div>
-                {user?.is_admin  &&
-                  <div className="users ms-3">
-                    <h2 className="text-center">Candidatos</h2>
-                    {users?.map((user, index) => (
-                      <CardUser
-                        key={index}
-                        user={user}
-                        handleDeleteUser={() => {
-                          console.log("handle delete user");
-                        }}
-                      />
-                    ))}
-                  </div>
-                }
+                {users &&
+                  users?.length > 0 &&
+                  users !== null &&
+                  users &&
+                  user?.is_admin && (
+                    <div className="users ms-3 w-40-min">
+                      <h2 className="text-center">Candidatos</h2>
+                      {users?.map((user, index) => (
+                        <CardUser
+                          key={index}
+                          user={user}
+                          handleDeleteUser={() => handleDeleteUser(user.id)}
+                        />
+                      ))}
+                    </div>
+                  )}
               </Card.Body>
             </Card>
 
