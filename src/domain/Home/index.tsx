@@ -45,6 +45,8 @@ const Content: React.FC = () => {
     });
   };
 
+  console.log("users = ", users)
+
   useEffect(() => {
     projects && setLoading(false);
   }, [projects, setLoading]);

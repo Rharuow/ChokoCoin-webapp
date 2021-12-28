@@ -11,7 +11,7 @@ export const getUsers: () => Promise<Array<IUser> | null> = async () => {
         Authorization: `Bearer ${session?.user.token}`,
       },
     })) as { data: Array<IUser> };
-    return data;
+    return data
   }
   return null;
 };
