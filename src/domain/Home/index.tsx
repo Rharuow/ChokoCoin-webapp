@@ -45,11 +45,9 @@ const Content: React.FC = () => {
     });
   };
 
-  console.log("users = ", users)
-
   useEffect(() => {
-    projects && setLoading(false);
-  }, [projects, setLoading]);
+    user && users && projects && setLoading(false);
+  }, [projects, setLoading, user, users]);
 
   return (
     <div className="h-100vh-min bg-dark p-3">
@@ -89,18 +87,20 @@ const Content: React.FC = () => {
                       />
                     ))}
                 </div>
-                <div className="users ms-3">
-                  <h2 className="text-center">Candidatos</h2>
-                  {users?.map((user, index) => (
-                    <CardUser
-                      key={index}
-                      user={user}
-                      handleDeleteUser={() => {
-                        console.log("handle delete user");
-                      }}
-                    />
-                  ))}
-                </div>
+                {user?.is_admin  &&
+                  <div className="users ms-3">
+                    <h2 className="text-center">Candidatos</h2>
+                    {users?.map((user, index) => (
+                      <CardUser
+                        key={index}
+                        user={user}
+                        handleDeleteUser={() => {
+                          console.log("handle delete user");
+                        }}
+                      />
+                    ))}
+                  </div>
+                }
               </Card.Body>
             </Card>
 
