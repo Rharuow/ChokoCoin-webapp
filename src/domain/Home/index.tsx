@@ -73,8 +73,8 @@ const Content: React.FC = () => {
   };
 
   const handleSubscribeUser: (id: string) => void = (id: string) => {
-
-  }
+    console.log("modal user ", id);
+  };
 
   useEffect(() => {
     console.log(users);
@@ -90,6 +90,7 @@ const Content: React.FC = () => {
       ) : (
         <>
           <ModalFormProject />
+
           <div className="flex-center-x-y flex-wrap flex-column h-100">
             <Button
               variant="danger"
@@ -130,6 +131,9 @@ const Content: React.FC = () => {
                         <CardUser
                           key={index}
                           user={user}
+                          handleSubscribeUser={() =>
+                            handleSubscribeUser(user.id)
+                          }
                           handleDeleteUser={() => handleDeleteUser(user.id)}
                         />
                       ))}

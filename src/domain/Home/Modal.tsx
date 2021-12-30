@@ -7,7 +7,7 @@ import Modal from "react-modal";
 import { HomeContext } from "../../pages/home";
 import { api } from "../../service/api";
 import { Button, Card, Form } from "react-bootstrap";
-import FormProject from "./NewProject";
+import FormProject from "../../components/Form/NewProject";
 import { IProject } from "../../../types/IProject";
 
 const ModalFormProject: React.FC = () => {

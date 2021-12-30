@@ -7,16 +7,18 @@ import Modal from "react-modal";
 import { HomeContext } from "../../../pages/home";
 import { api } from "../../../service/api";
 import { Button, Card, Form } from "react-bootstrap";
+import FormProject from "../../Form/SubcribeUserProject";
 import { IProject } from "../../../../types/IProject";
+import { IUser } from "../../../../types/IUser";
 
-const ModalFormProject: React.FC = () => {
+const ModalSubscriberUserProject: React.FC<{ user: IUser }> = ({ user }) => {
   const { modalIsOpen, projects, setProjects, setIsOpen } =
     useContext(HomeContext);
 
   const methods = useForm();
 
-  const onSubmit: (data: any) => void = (data) => {
-    console.log(" onSubmit ", data);
+  const onSubmit: (data: { name: string; value: string }) => void = (data) => {
+    console.log(" Subscribe User Project = ", data);
   };
 
   const customStyles = {
@@ -32,7 +34,11 @@ const ModalFormProject: React.FC = () => {
   };
 
   return (
-    <Modal isOpen={modalIsOpen.registrateUser} style={customStyles}>
+    <Modal
+      isOpen={modalIsOpen.subscribeUser}
+      style={customStyles}
+      contentLabel="Example Modal"
+    >
       <Card>
         <Card.Header className="flex-end-x flex-wrap">
           <Button
@@ -42,20 +48,18 @@ const ModalFormProject: React.FC = () => {
             onClick={() =>
               setIsOpen({
                 ...modalIsOpen,
-                registrateUser: false,
+                subscribeUser: !modalIsOpen.subscribeUser,
               })
             }
           >
             x
           </Button>
-          <h1 className="d-block w-100">
-            Adicione um parceiro para um Projeto
-          </h1>
+          <h1 className="d-block w-100">Inscrever</h1>
         </Card.Header>
         <Card.Body>
           <FormProvider {...methods}>
             <Form onSubmit={methods.handleSubmit(onSubmit)}>
-              {/* <FormProject /> */}
+              <FormProject user={user} />
             </Form>
           </FormProvider>
         </Card.Body>
@@ -64,4 +68,4 @@ const ModalFormProject: React.FC = () => {
   );
 };
 
-export default ModalFormProject;
+export default ModalSubscriberUserProject;

@@ -3,16 +3,18 @@ import { Card, Button } from "react-bootstrap";
 
 import { IUser } from "../../../types/IUser";
 import { HomeContext } from "../../pages/home";
+import ModalSubscriberUserProject from "./Modal/SubscribeUserProjects";
 
 const CardUser: React.FC<{
   user: IUser;
   handleDeleteUser: (id: string) => void;
-}> = ({ user, handleDeleteUser }) => {
-
-  const { setIsOpen, modalIsOpen } = useContext(HomeContext)
+  handleSubscribeUser: (id: string) => void;
+}> = ({ user, handleDeleteUser, handleSubscribeUser }) => {
+  const { setIsOpen, modalIsOpen } = useContext(HomeContext);
 
   return (
     <Card className="my-3">
+      <ModalSubscriberUserProject user={user} />
       <Card.Body>
         <p>Nome: {user.username}</p>
         <hr />
@@ -25,7 +27,17 @@ const CardUser: React.FC<{
           >
             Excluir
           </Button>
-          <Button size="sm" onClick={() => setIsOpen({...modalIsOpen, subscribeUser: !modalIsOpen.subscribeUser})}>Inscrever</Button>
+          <Button
+            size="sm"
+            onClick={() =>
+              setIsOpen({
+                ...modalIsOpen,
+                subscribeUser: !modalIsOpen.subscribeUser,
+              })
+            }
+          >
+            Inscrever
+          </Button>
         </div>
       </Card.Body>
     </Card>
