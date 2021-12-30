@@ -21,6 +21,7 @@ const Home: React.FC = () => {
   const [modalIsOpen, setIsOpen] = useState<IModal>({
     createProject: false,
     registrateUser: false,
+    subscribeUser: false
   });
   const [users, setUsers] = useState<Array<IUser>>();
 

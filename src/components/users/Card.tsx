@@ -8,6 +8,9 @@ const CardUser: React.FC<{
   user: IUser;
   handleDeleteUser: (id: string) => void;
 }> = ({ user, handleDeleteUser }) => {
+
+  const { setIsOpen, modalIsOpen } = useContext(HomeContext)
+
   return (
     <Card className="my-3">
       <Card.Body>
@@ -22,7 +25,7 @@ const CardUser: React.FC<{
           >
             Excluir
           </Button>
-          <Button size="sm">Inscrever</Button>
+          <Button size="sm" onClick={() => setIsOpen({...modalIsOpen, subscribeUser: !modalIsOpen.subscribeUser})}>Inscrever</Button>
         </div>
       </Card.Body>
     </Card>

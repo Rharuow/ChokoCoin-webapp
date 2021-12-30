@@ -72,6 +72,10 @@ const Content: React.FC = () => {
     });
   };
 
+  const handleSubscribeUser: (id: string) => void = (id: string) => {
+
+  }
+
   useEffect(() => {
     console.log(users);
     user && projects && setLoading(false);
